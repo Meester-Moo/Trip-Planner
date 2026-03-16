@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+
+    <!-- Excursion Name -->
+    <TextView
+        android:id="@+id/excursionDetailsName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Excursion Name:"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editExcursionName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="e.g., Snorkeling"
+        android:inputType="textCapWords"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/excursionDetailsName" />
+
+    <!-- Excursion Date -->
+    <TextView
+        android:id="@+id/excursionDetailsDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Date:"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editExcursionName" />
+
+    <CheckBox
+        android:id="@+id/checkboxNotify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Notify on Excursion Date"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editExcursionDate" />
+
+    <EditText
+        android:id="@+id/editExcursionDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:clickable="true"
+        android:cursorVisible="false"
+        android:focusableInTouchMode="true"
+        android:hint="Tap to select date"
+        android:inputType="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/excursionDetailsDate" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
