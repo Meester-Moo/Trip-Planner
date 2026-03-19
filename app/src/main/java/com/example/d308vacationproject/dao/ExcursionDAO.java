@@ -30,8 +30,8 @@ public interface ExcursionDAO {
     @Delete
     void delete(Excursion excursion);
 
-    // Get all excursions for a specific vacation, ordered by ID.
+    // Get all excursions for a specific trip, ordered by ID.
     // Returns LiveData so the UI automatically updates when excursions change.
-    @Query("SELECT * FROM EXCURSIONS WHERE vacationID=:vacationID ORDER BY excursionID ASC")
-    LiveData<List<Excursion>> getAssociatedExcursions(int vacationID);
+    @Query("SELECT * FROM EXCURSIONS WHERE tripID=:tripID ORDER BY excursionID ASC")
+    LiveData<List<Excursion>> getAssociatedExcursions(int tripID);
 }

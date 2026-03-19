@@ -32,7 +32,7 @@ import java.util.Calendar;
 // Detailed view for creating or editing an excursion.
 // Displays excursion fields (title, date, notification checkbox).
 // Menu options: Save (always visible), Delete (only visible for existing excursions).
-// Validates that the excursion date falls within the parent vacation's date range.
+// Validates that the excursion date falls within the parent trip's date range.
 public class ExcursionDetails extends AppCompatActivity {
 
     private EditText editName;
@@ -41,10 +41,10 @@ public class ExcursionDetails extends AppCompatActivity {
     private Repository repository;
 
     private int excursionID = -1;       // -1 means this is a new excursion (not yet saved)
-    private int vacationID = -1;        // Parent vacation's ID
+    private int tripID = -1;            // Parent trip's ID
 
-    private String vacationStart;       // Parent vacation's start date (for date range validation)
-    private String vacationEnd;         // Parent vacation's end date (for date range validation)
+    private String tripStart;           // Parent trip's start date (for date range validation)
+    private String tripEnd;             // Parent trip's end date (for date range validation)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +66,9 @@ public class ExcursionDetails extends AppCompatActivity {
         editDate = findViewById(R.id.editExcursionDate);
         checkboxNotify = findViewById(R.id.checkboxNotify);
 
-        // --- Read intent extras passed from ExcursionAdapter or VacationDetails FAB ---
+        // --- Read intent extras passed from ExcursionAdapter or TripDetails FAB ---
         excursionID = getIntent().getIntExtra("excursionID", -1);
-        vacationID = getIntent().getIntExtra("vacationID", -1);
+        tripID = getIntent().getIntExtra("tripID", -1);
         String name = getIntent().getStringExtra("name");
         String date = getIntent().getStringExtra("date");
 
@@ -82,9 +82,9 @@ public class ExcursionDetails extends AppCompatActivity {
         // Tapping the date field opens a date picker dialog instead of the keyboard
         editDate.setOnClickListener(v -> showDatePicker());
 
-        // Store the parent vacation's date range for excursion date validation
-        vacationStart = getIntent().getStringExtra("vacationStart");
-        vacationEnd = getIntent().getStringExtra("vacationEnd");
+        // Store the parent trip's date range for excursion date validation
+        tripStart = getIntent().getStringExtra("tripStart");
+        tripEnd = getIntent().getStringExtra("tripEnd");
     }
 
     @Override
@@ -125,15 +125,15 @@ public class ExcursionDetails extends AppCompatActivity {
         String name = editName.getText().toString().trim();
         String date = editDate.getText().toString().trim();
 
-        // Validate that excursion date falls within the parent vacation's date range
-        if (vacationStart != null && vacationEnd != null && !vacationStart.isEmpty() && !vacationEnd.isEmpty()) {
+        // Validate that excursion date falls within the parent trip's date range
+        if (tripStart != null && tripEnd != null && !tripStart.isEmpty() && !tripEnd.isEmpty()) {
             DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MM/dd/yyyy");
             try {
                 LocalDate excDate = LocalDate.parse(date, fmt);
-                LocalDate vacStart = LocalDate.parse(vacationStart, fmt);
-                LocalDate vacEnd = LocalDate.parse(vacationEnd, fmt);
-                if (excDate.isBefore(vacStart) || excDate.isAfter(vacEnd)) {
-                    Toast.makeText(this, "Excursion date must be within vacation dates", Toast.LENGTH_LONG).show();
+                LocalDate parsedTripStart = LocalDate.parse(tripStart, fmt);
+                LocalDate parsedTripEnd = LocalDate.parse(tripEnd, fmt);
+                if (excDate.isBefore(parsedTripStart) || excDate.isAfter(parsedTripEnd)) {
+                    Toast.makeText(this, "Excursion date must be within trip dates", Toast.LENGTH_LONG).show();
                     return;
                 }
             } catch (DateTimeParseException e) {
@@ -148,16 +148,16 @@ public class ExcursionDetails extends AppCompatActivity {
             return;
         }
 
-        // Prevent saving if no valid vacation is associated
-        if (vacationID <= 0) {
-            Toast.makeText(this, "Invalid vacation ID", Toast.LENGTH_LONG).show();
+        // Prevent saving if no valid trip is associated
+        if (tripID <= 0) {
+            Toast.makeText(this, "Invalid trip ID", Toast.LENGTH_LONG).show();
             return;
         }
 
         // Create excursion object (pass 0 for new excursions so Room auto-generates the ID)
         Excursion excursion = new Excursion(
                 excursionID == -1 ? 0 : excursionID,
-                name, date, vacationID,
+                name, date, tripID,
                 checkboxNotify.isChecked()
         );
 
@@ -212,7 +212,7 @@ public class ExcursionDetails extends AppCompatActivity {
             return;
         }
 
-        Excursion excursion = new Excursion(excursionID, "", "", vacationID, false);
+        Excursion excursion = new Excursion(excursionID, "", "", tripID, false);
         repository.delete(excursion);
         Toast.makeText(this, "Excursion deleted", Toast.LENGTH_SHORT).show();
         finish();

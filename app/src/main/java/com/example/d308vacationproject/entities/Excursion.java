@@ -4,7 +4,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 // Room entity representing an excursion record in the "excursions" table.
-// Each excursion belongs to a vacation (linked by vacationID) and has a title, date, and notification preference.
+// Each excursion belongs to a trip (linked by tripID) and has a title, date, and notification preference.
 @Entity(tableName = "excursions")
 public class Excursion {
 
@@ -12,16 +12,16 @@ public class Excursion {
     private int excursionID;            // Auto-generated primary key
     private String excursionName;       // Excursion title
     private String excursionDate;       // Excursion date in MM/dd/yyyy format
-    private int vacationID;             // Foreign key linking to the parent vacation
+    private int tripID;                 // Foreign key linking to the parent trip
     private boolean notify = false;     // Whether to alert on the excursion date
 
     // Constructor used by Room and when creating/updating excursions in the UI.
     // Pass 0 for excursionID when creating a new excursion (Room auto-generates the ID).
-    public Excursion(int excursionID, String excursionName, String excursionDate, int vacationID, boolean notify) {
+    public Excursion(int excursionID, String excursionName, String excursionDate, int tripID, boolean notify) {
         this.excursionID = excursionID;
         this.excursionName = excursionName;
         this.excursionDate = excursionDate;
-        this.vacationID = vacationID;
+        this.tripID = tripID;
         this.notify = notify;
     }
 
@@ -51,12 +51,12 @@ public class Excursion {
         this.excursionDate = excursionDate;
     }
 
-    public int getVacationID() {
-        return vacationID;
+    public int getTripID() {
+        return tripID;
     }
 
-    public void setVacationID(int vacationID) {
-        this.vacationID = vacationID;
+    public void setTripID(int tripID) {
+        this.tripID = tripID;
     }
 
     public boolean isNotify() {

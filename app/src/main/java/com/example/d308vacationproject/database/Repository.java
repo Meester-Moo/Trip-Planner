@@ -7,9 +7,9 @@ import android.os.Looper;
 import androidx.lifecycle.LiveData;
 
 import com.example.d308vacationproject.dao.ExcursionDAO;
-import com.example.d308vacationproject.dao.VacationDAO;
+import com.example.d308vacationproject.dao.TripDAO;
 import com.example.d308vacationproject.entities.Excursion;
-import com.example.d308vacationproject.entities.Vacation;
+import com.example.d308vacationproject.entities.Trip;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 public class Repository {
 
     private final ExcursionDAO mExcursionDAO;
-    private final VacationDAO mVacationDAO;
+    private final TripDAO mTripDAO;
 
     // Thread pool for executing database write operations off the main thread
     private static final int NUMBER_OF_THREADS = 4;
@@ -29,35 +29,35 @@ public class Repository {
 
     // Constructor: gets the database singleton and initializes both DAOs
     public Repository(Application application) {
-        VacationDatabaseBuilder db = VacationDatabaseBuilder.getDatabase(application);
+        TripDatabaseBuilder db = TripDatabaseBuilder.getDatabase(application);
         mExcursionDAO = db.excursionDAO();
-        mVacationDAO = db.vacationDAO();
+        mTripDAO = db.tripDAO();
     }
 
     // --- Read Operations (return LiveData for automatic UI updates) ---
 
-    // Get all vacations, ordered by ID
-    public LiveData<List<Vacation>> getmAllVacations() {
-        return mVacationDAO.getmAllVacations();
+    // Get all trips, ordered by ID
+    public LiveData<List<Trip>> getmAllTrips() {
+        return mTripDAO.getmAllTrips();
     }
 
-    // Get all excursions belonging to a specific vacation
-    public LiveData<List<Excursion>> getAssociatedExcursions(int vacationID) {
-        return mExcursionDAO.getAssociatedExcursions(vacationID);
+    // Get all excursions belonging to a specific trip
+    public LiveData<List<Excursion>> getAssociatedExcursions(int tripID) {
+        return mExcursionDAO.getAssociatedExcursions(tripID);
     }
 
-    // --- Vacation Write Operations (fire-and-forget on background thread) ---
+    // --- Trip Write Operations (fire-and-forget on background thread) ---
 
-    public void insert(Vacation vacation) {
-        databaseExecutor.execute(() -> mVacationDAO.insert(vacation));
+    public void insert(Trip trip) {
+        databaseExecutor.execute(() -> mTripDAO.insert(trip));
     }
 
-    public void update(Vacation vacation) {
-        databaseExecutor.execute(() -> mVacationDAO.update(vacation));
+    public void update(Trip trip) {
+        databaseExecutor.execute(() -> mTripDAO.update(trip));
     }
 
-    public void delete(Vacation vacation) {
-        databaseExecutor.execute(() -> mVacationDAO.delete(vacation));
+    public void delete(Trip trip) {
+        databaseExecutor.execute(() -> mTripDAO.delete(trip));
     }
 
     // --- Excursion Write Operations ---

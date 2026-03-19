@@ -13,7 +13,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.d308vacationproject.R;
 
 // Home screen / launch activity.
-// Displays the app title and a "Start" button that navigates to the vacation list.
+// Displays the app title and a "Start" button that navigates to the trip list.
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -29,17 +29,11 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // "Start" button navigates to the vacation list screen
+        // "Start" button navigates to the trip list screen
         Button button = findViewById(R.id.button);
         button.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, VacationList.class);
+            Intent intent = new Intent(MainActivity.this, TripList.class);
             startActivity(intent);
         });
     }
 }
-
-
-
-
-//Take screenshot of each page on APK
-//Take screenshot of bottom right of Android Studio pop (only stays for 30 seconds)*******
