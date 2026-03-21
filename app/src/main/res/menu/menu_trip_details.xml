@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/tripSave"
+        android:title="Save Trip" />
+    <item
+        android:id="@+id/tripDelete"
+        android:title="Delete Trip" />
+    <item
+        android:id="@+id/tripShare"
+        android:title="Share Trip" />
+</menu>
