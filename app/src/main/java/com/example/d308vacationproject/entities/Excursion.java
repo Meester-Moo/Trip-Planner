@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey;
 // Room entity representing an excursion record in the "excursions" table.
 // Each excursion belongs to a trip (linked by tripID) and has a title, date, and notification preference.
 @Entity(tableName = "excursions")
-public class Excursion {
+public class Excursion extends PlannerItem {
 
     @PrimaryKey(autoGenerate = true)
     private int excursionID;            // Auto-generated primary key
@@ -65,5 +65,15 @@ public class Excursion {
 
     public void setNotify(boolean notify) {
         this.notify = notify;
+    }
+
+    @Override
+    public String getItemName() {
+        return excursionName;
+    }
+
+    @Override
+    public String getSummary() {
+        return excursionName + " on " + excursionDate;
     }
 }
