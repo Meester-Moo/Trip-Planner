@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Search field -->
+    <item
+        android:id="@+id/action_search_excursions"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="collapseActionView|ifRoom"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="Search Excursions" />
+
     <item
         android:id="@+id/tripSave"
         android:title="Save Trip" />

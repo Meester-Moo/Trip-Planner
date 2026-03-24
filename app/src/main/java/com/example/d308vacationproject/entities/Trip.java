@@ -20,10 +20,11 @@ public class Trip extends PlannerItem {
     private String endDate;              // End date in MM/dd/yyyy format
     private boolean notifyStart = false; // Whether to alert on start date
     private boolean notifyEnd = false;   // Whether to alert on end date
+    private int userId;                  // Links this trip to the user who created it
 
     // Constructor used by Room and when creating/updating trips in the UI.
     // Pass 0 for tripID when creating a new trip (Room auto-generates the ID).
-    public Trip(int tripID, String tripName, String hotel, String startDate, String endDate, boolean notifyStart, boolean notifyEnd) {
+    public Trip(int tripID, String tripName, String hotel, String startDate, String endDate, boolean notifyStart, boolean notifyEnd, int userId) {
         this.tripID = tripID;
         this.tripName = tripName;
         this.hotel = hotel;
@@ -31,6 +32,7 @@ public class Trip extends PlannerItem {
         this.endDate = endDate;
         this.notifyStart = notifyStart;
         this.notifyEnd = notifyEnd;
+        this.userId = userId;
     }
 
     // --- Getters and Setters (required by Room) ---
@@ -89,6 +91,14 @@ public class Trip extends PlannerItem {
 
     public void setNotifyEnd(boolean notifyEnd) {
         this.notifyEnd = notifyEnd;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     @Override

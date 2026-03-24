@@ -6,18 +6,24 @@ import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.EditText;
+
+import androidx.appcompat.widget.SearchView;
+
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,12 +47,15 @@ import java.util.List;
 public class TripDetails extends AppCompatActivity {
 
     private int tripID = -1;    // -1 means this is a new trip (not yet saved)
-    private EditText editName, editHotel, editStartDate, editEndDate;
+    private EditText editName;
+    private EditText editHotel;
+    private EditText editStartDate;
+    private EditText editEndDate;
     private Repository repository;
     private ExcursionAdapter excursionAdapter;
-    private RecyclerView recyclerView;
     private CheckBox checkboxNotifyStart;
     private CheckBox checkboxNotifyEnd;
+    private LiveData<List<Excursion>> currentExcursionData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +107,7 @@ public class TripDetails extends AppCompatActivity {
         });
 
         // --- Set up excursion RecyclerView ---
-        recyclerView = findViewById(R.id.recyclerViewExcursions);
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewExcursions);
         excursionAdapter = new ExcursionAdapter(this, "", "");
         recyclerView.setAdapter(excursionAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -138,10 +147,7 @@ public class TripDetails extends AppCompatActivity {
         });
 
         // Observe excursions for this trip and update the RecyclerView
-        repository.getAssociatedExcursions(tripID).observe(this, excursions -> {
-            List<Excursion> list = excursions != null ? new ArrayList<>(excursions) : new ArrayList<>();
-            excursionAdapter.setExcursions(list);
-        });
+        loadExcursions(null);
     }
 
     // Shows a DatePickerDialog and sets the selected date on the appropriate field
@@ -158,9 +164,61 @@ public class TripDetails extends AppCompatActivity {
         ).show();
     }
 
+    // Loads excursions from the database, optionally filtered by a search query.
+    private void loadExcursions(String searchQuery) {
+        if (currentExcursionData != null) {
+            currentExcursionData.removeObservers(this);
+        }
+
+        if (searchQuery == null || searchQuery.trim().isEmpty()) {
+            currentExcursionData = repository.getAssociatedExcursions(tripID);
+        } else {
+            currentExcursionData = repository.searchExcursions(searchQuery.trim(), tripID);
+        }
+
+        currentExcursionData.observe(this, excursions -> {
+            List<Excursion> list = excursions != null ? new ArrayList<>(excursions) : new ArrayList<>();
+            excursionAdapter.setExcursions(list);
+        });
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_trip_details, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search_excursions);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint("Search excursions...");
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (tripID != -1) {
+                    loadExcursions(newText);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+        });
+
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
+                if (tripID != -1) {
+                    loadExcursions(null);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
+                return true;
+            }
+        });
+
         return true;
     }
 
@@ -181,7 +239,7 @@ public class TripDetails extends AppCompatActivity {
                     Toast.makeText(this, "Cannot delete trip with associated excursions", Toast.LENGTH_LONG).show();
                     return true;
                 }
-                Trip trip = new Trip(tripID, "", "", "", "", false, false);
+                Trip trip = new Trip(tripID, "", "", "", "", false, false, 0);
                 repository.delete(trip);
                 Toast.makeText(this, "Trip deleted", Toast.LENGTH_SHORT).show();
                 finish();
@@ -218,6 +276,9 @@ public class TripDetails extends AppCompatActivity {
         startActivity(Intent.createChooser(shareIntent, "Share via"));
     }
 
+    // Get the logged-in user's ID
+
+
     // Validates input and saves (inserts or updates) the trip to the database.
     // Schedules notifications if the user checked the notification boxes.
     private void saveTrip() {
@@ -248,12 +309,16 @@ public class TripDetails extends AppCompatActivity {
             }
         }
 
+        SharedPreferences prefs = getSharedPreferences("TripPlannerPrefs", MODE_PRIVATE);
+        int userId = prefs.getInt("loggedInUserId", -1);
+
         // Create trip object (pass 0 for new trips so Room auto-generates the ID)
         Trip trip = new Trip(
                 tripID == -1 ? 0 : tripID,
                 name, hotel, start, end,
                 checkboxNotifyStart.isChecked(),
-                checkboxNotifyEnd.isChecked()
+                checkboxNotifyEnd.isChecked(),
+                userId
         );
 
         // Insert or update depending on whether this is a new or existing trip

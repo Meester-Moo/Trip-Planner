@@ -8,12 +8,16 @@ import androidx.lifecycle.LiveData;
 
 import com.example.d308vacationproject.dao.ExcursionDAO;
 import com.example.d308vacationproject.dao.TripDAO;
+import com.example.d308vacationproject.dao.UserDAO;
+
 import com.example.d308vacationproject.entities.Excursion;
 import com.example.d308vacationproject.entities.Trip;
+import com.example.d308vacationproject.entities.User;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 // Repository acts as a clean API between the UI layer and the database.
 // All database writes run on a background thread pool to avoid blocking the UI.
@@ -22,6 +26,8 @@ public class Repository {
 
     private final ExcursionDAO mExcursionDAO;
     private final TripDAO mTripDAO;
+
+    private final UserDAO mUserDAO;
 
     // Thread pool for executing database write operations off the main thread
     private static final int NUMBER_OF_THREADS = 4;
@@ -32,6 +38,7 @@ public class Repository {
         TripDatabaseBuilder db = TripDatabaseBuilder.getDatabase(application);
         mExcursionDAO = db.excursionDAO();
         mTripDAO = db.tripDAO();
+        mUserDAO = db.userDAO();
     }
 
     // --- Read Operations (return LiveData for automatic UI updates) ---
@@ -41,12 +48,27 @@ public class Repository {
         return mTripDAO.getmAllTrips();
     }
 
+    // Get trips for a specific user only
+    public LiveData<List<Trip>> getTripsByUser(int userId) {
+        return mTripDAO.getTripsByUser(userId);
+    }
+
+    // Search trips by name or hotel for a specific user
+    public LiveData<List<Trip>> searchTrips(String searchQuery, int userId) {
+        return mTripDAO.searchTrips(searchQuery, userId);
+    }
+
     // Get all excursions belonging to a specific trip
     public LiveData<List<Excursion>> getAssociatedExcursions(int tripID) {
         return mExcursionDAO.getAssociatedExcursions(tripID);
     }
 
-    // --- Trip Write Operations (fire-and-forget on background thread) ---
+    // Search excursions by name within a specific trip
+    public LiveData<List<Excursion>> searchExcursions(String searchQuery, int tripID) {
+        return mExcursionDAO.searchExcursions(searchQuery, tripID);
+    }
+
+    // --- Trip Write Operations (databaseExecutor.execute() = fire-and-forget on background thread) ---
 
     public void insert(Trip trip) {
         databaseExecutor.execute(() -> mTripDAO.insert(trip));
@@ -85,5 +107,36 @@ public class Repository {
 
     public void delete(Excursion excursion) {
         databaseExecutor.execute(() -> mExcursionDAO.delete(excursion));
+    }
+
+    // --- User Operations ---
+
+    // Attempt to register a new user. Returns true if successful, false if username taken.
+    // Runs on the background thread pool and uses Future to wait for the result.
+    public boolean registerUser(String username, String hashedPassword) {
+        Future<Boolean> future = databaseExecutor.submit(() -> {
+            if (mUserDAO.getUserByUsername(username) != null) {
+                return false;   // Username already exists
+            }
+            mUserDAO.insert(new User(0, username, hashedPassword));
+            return true;
+        });
+        try {
+            return future.get();    //Wait for the background thread to finish
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    //Attempt to log in. Returns the User object if credentials match, null otherwise.
+    public User loginUser(String username, String hashedPassword) {
+        Future<User> future = databaseExecutor.submit(() -> {
+            return mUserDAO.login(username, hashedPassword);
+        });
+        try {
+            return future.get();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

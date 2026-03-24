@@ -33,4 +33,13 @@ public interface TripDAO {
     // Get all trips ordered by ID. Returns LiveData so the UI automatically updates when data changes.
     @Query("SELECT * FROM TRIPS ORDER BY tripID ASC")
     LiveData<List<Trip>> getmAllTrips();
+
+    // Get only trips belonging to a specific user
+    @Query("SELECT * FROM TRIPS WHERE userId = :userId ORDER BY tripID ASC")
+    LiveData<List<Trip>> getTripsByUser(int userId);
+
+    // Search trips by name or hotel for a specific user.
+    // The '%' wildcards around the search term enable "contains" matching.
+    @Query("SELECT * FROM TRIPS WHERE userId = :userId AND (tripName LIKE '%' || :searchQuery || '%' OR hotel LIKE '%' || :searchQuery || '%') ORDER BY tripID ASC")
+    LiveData<List<Trip>> searchTrips(String searchQuery, int userId);
 }

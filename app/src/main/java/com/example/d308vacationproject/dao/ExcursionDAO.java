@@ -34,4 +34,8 @@ public interface ExcursionDAO {
     // Returns LiveData so the UI automatically updates when excursions change.
     @Query("SELECT * FROM EXCURSIONS WHERE tripID=:tripID ORDER BY excursionID ASC")
     LiveData<List<Excursion>> getAssociatedExcursions(int tripID);
+
+    // Search excursions by name within a specific trip.
+    @Query("SELECT * FROM EXCURSIONS WHERE tripID = :tripID AND excursionName LIKE '%' || :searchQuery || '%' ORDER BY excursionID ASC")
+    LiveData<List<Excursion>> searchExcursions(String searchQuery, int tripID);
 }
