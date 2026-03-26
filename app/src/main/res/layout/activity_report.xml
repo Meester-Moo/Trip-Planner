@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".UI.ReportActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Report Title -->
+        <TextView
+            android:id="@+id/reportTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Trip Planner Report"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <!-- Generated Timestamp -->
+        <TextView
+            android:id="@+id/reportTimestamp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:textColor="#666666"
+            android:textSize="14sp" />
+
+        <!-- Username -->
+        <TextView
+            android:id="@+id/reportUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:textColor="#666666"
+            android:textSize="14sp" />
+
+        <!-- Trips Section Header -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Trips"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:background="#CCCCCC" />
+
+        <!-- Trips Table -->
+        <TableLayout
+            android:id="@+id/tripsTable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="0" />
+
+        <!-- Excursions Section Header -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Excursion Details"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:background="#CCCCCC" />
+
+        <!-- Excursions Table -->
+        <TableLayout
+            android:id="@+id/excursionsTable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="0" />
+
+        <!-- "No data" message (hidden by default) -->
+        <TextView
+            android:id="@+id/noDataMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:gravity="center"
+            android:text="No trips found. Create some trips first."
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+</ScrollView>

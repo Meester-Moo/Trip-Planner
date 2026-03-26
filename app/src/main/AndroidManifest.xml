@@ -26,6 +26,11 @@
             android:label="Excursion Details"
             android:parentActivityName=".UI.TripDetails" />
         <activity
+            android:name=".UI.ReportActivity"
+            android:exported="false"
+            android:label="Report"
+            android:parentActivityName=".UI.TripList" />
+        <activity
             android:name=".UI.TripDetails"
             android:exported="false"
             android:label="Trip Details and Excursion List"

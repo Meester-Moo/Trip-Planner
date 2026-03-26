@@ -38,4 +38,8 @@ public interface ExcursionDAO {
     // Search excursions by name within a specific trip.
     @Query("SELECT * FROM EXCURSIONS WHERE tripID = :tripID AND excursionName LIKE '%' || :searchQuery || '%' ORDER BY excursionID ASC")
     LiveData<List<Excursion>> searchExcursions(String searchQuery, int tripID);
+
+    // Non-LiveData query for reports - returns all excursions for a trip as a regular List
+    @Query("SELECT * FROM EXCURSIONS WHERE tripID = :tripID ORDER BY excursionID ASC")
+    List<Excursion> getAssociatedExcursionsDirect(int tripID);
 }

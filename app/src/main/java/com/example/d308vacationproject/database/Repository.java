@@ -14,6 +14,7 @@ import com.example.d308vacationproject.entities.Excursion;
 import com.example.d308vacationproject.entities.Trip;
 import com.example.d308vacationproject.entities.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -139,4 +140,33 @@ public class Repository {
             return null;
         }
     }
+
+    // --- Report Operations (nonLiveData queries) ---
+
+    // Get all trips for a user returned as a List.
+    // Uses Future to run on background thread and wait for results
+    public List<Trip> getTripsByUserDirect(int userId) {
+        Future<List<Trip>> future = databaseExecutor.submit(() -> {
+            return mTripDAO.getTripsByUserDirect(userId);
+        });
+        try {
+            return future.get();
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+    }
+
+    // Get all trips for a user returned as a List.
+    // Uses Future to run on background thread and wait for results
+    public List<Excursion> getAssociatedExcursionsDirect(int tripID) {
+        Future<List<Excursion>> future = databaseExecutor.submit(() -> {
+            return mExcursionDAO.getAssociatedExcursionsDirect(tripID);
+        });
+        try {
+            return future.get();
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+    }
+
 }

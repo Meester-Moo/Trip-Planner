@@ -42,4 +42,9 @@ public interface TripDAO {
     // The '%' wildcards around the search term enable "contains" matching.
     @Query("SELECT * FROM TRIPS WHERE userId = :userId AND (tripName LIKE '%' || :searchQuery || '%' OR hotel LIKE '%' || :searchQuery || '%') ORDER BY tripID ASC")
     LiveData<List<Trip>> searchTrips(String searchQuery, int userId);
+
+    // Non-LiveData query for reports - returns all Trips as a List.
+    // Must be called from a background thread as Room forbids database access on the main thread
+    @Query("SELECT * FROM TRIPS WHERE userId = :userId ORDER BY tripID ASC")
+    List<Trip> getTripsByUserDirect(int userId);
 }

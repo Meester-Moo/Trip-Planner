@@ -9,4 +9,8 @@
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="collapseActionView|ifRoom" />
 
+    <item
+        android:id="@+id/action_generate_report"
+        android:title="Generate Report" />
+
 </menu>

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import androidx.appcompat.widget.SearchView;
 
 import androidx.activity.EdgeToEdge;
@@ -145,6 +146,13 @@ public class TripList extends AppCompatActivity {
         // Handle the back arrow in the action bar
         if (item.getItemId() == android.R.id.home) {
             finish();
+            return true;
+        }
+
+        //Navigate to the Report screen
+        if (item.getItemId() == R.id.action_generate_report) {
+            Intent intent = new Intent(TripList.this, ReportActivity.class);
+            startActivity(intent);
             return true;
         }
 
