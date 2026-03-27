@@ -28,15 +28,15 @@ public class ExcursionAdapter extends RecyclerView.Adapter<ExcursionAdapter.Excu
     private final LayoutInflater mInflater;
 
     // ViewHolder holds references to views for a single excursion list item
-    class ExcursionViewHolder extends RecyclerView.ViewHolder {
+    public class ExcursionViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView excursionItemView;   // Excursion name
         private final TextView excursionItemView2;  // Excursion date
 
         private ExcursionViewHolder(View itemView) {
             super(itemView);
-            excursionItemView = itemView.findViewById(R.id.textView2);
-            excursionItemView2 = itemView.findViewById(R.id.textView3);
+            excursionItemView = itemView.findViewById(R.id.excursionListItemName);
+            excursionItemView2 = itemView.findViewById(R.id.excursionListItemDate);
 
             // Click listener: opens ExcursionDetails with all excursion data and trip date range
             itemView.setOnClickListener(view -> {

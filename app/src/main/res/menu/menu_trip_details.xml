@@ -5,10 +5,10 @@
     <!-- Search field -->
     <item
         android:id="@+id/action_search_excursions"
-        app:actionViewClass="androidx.appcompat.widget.SearchView"
-        app:showAsAction="collapseActionView|ifRoom"
         android:icon="@android:drawable/ic_menu_search"
-        android:title="Search Excursions" />
+        android:title="Search Excursions"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="collapseActionView|ifRoom" />
 
     <item
         android:id="@+id/tripSave"

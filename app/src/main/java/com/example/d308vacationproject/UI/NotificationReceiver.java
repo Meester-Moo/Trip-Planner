@@ -30,11 +30,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         }
 
         // Build the notification with title, message, and app icon
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Trip Planner Alert")
-                .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID).setSmallIcon(R.mipmap.ic_launcher).setContentTitle("Trip Planner Alert").setContentText(message).setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         // Use a unique notification ID so multiple notifications don't overwrite each other
         int notificationId = intent.getIntExtra("notification_id", 0);

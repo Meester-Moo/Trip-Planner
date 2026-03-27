@@ -8,10 +8,10 @@ import androidx.room.RoomDatabase;
 
 import com.example.d308vacationproject.dao.ExcursionDAO;
 import com.example.d308vacationproject.dao.TripDAO;
+import com.example.d308vacationproject.dao.UserDAO;
 import com.example.d308vacationproject.entities.Excursion;
 import com.example.d308vacationproject.entities.Trip;
 import com.example.d308vacationproject.entities.User;
-import com.example.d308vacationproject.dao.UserDAO;
 
 // Room database class. Registers both entities (Trip, Excursion) and provides access to their DAOs.
 // Uses the singleton pattern so only one database instance exists at a time.
@@ -35,9 +35,7 @@ public abstract class TripDatabaseBuilder extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (TripDatabaseBuilder.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), TripDatabaseBuilder.class, "MyTripDatabase.db")
-                            .fallbackToDestructiveMigration()
-                            .build();
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), TripDatabaseBuilder.class, "MyTripDatabase.db").fallbackToDestructiveMigration().build();
                 }
             }
         }

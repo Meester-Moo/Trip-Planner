@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TableLayout;
@@ -87,13 +86,7 @@ public class ReportActivity extends AppCompatActivity {
         // Add a data row for each trip
         for (Trip trip : trips) {
             List<Excursion> excursions = repository.getAssociatedExcursionsDirect(trip.getTripID());
-            tripsTable.addView(createDataRow(new String[]{
-                    trip.getTripName(),
-                    trip.getHotel(),
-                    trip.getStartDate(),
-                    trip.getEndDate(),
-                    String.valueOf(excursions.size())
-            }));
+            tripsTable.addView(createDataRow(new String[]{trip.getTripName(), trip.getHotel(), trip.getStartDate(), trip.getEndDate(), String.valueOf(excursions.size())}));
         }
 
         // --- Build the Excursions Table ---
@@ -113,11 +106,7 @@ public class ReportActivity extends AppCompatActivity {
             List<Excursion> excursions = repository.getAssociatedExcursionsDirect(trip.getTripID());
 
             for (Excursion excursion : excursions) {
-                excursionsTable.addView(createDataRow(new String[]{
-                        excursion.getExcursionName(),
-                        excursion.getExcursionDate(),
-                        trip.getTripName()
-                }));
+                excursionsTable.addView(createDataRow(new String[]{excursion.getExcursionName(), excursion.getExcursionDate(), trip.getTripName()}));
             }
 
             // Add to PlannerItem list for the summary section

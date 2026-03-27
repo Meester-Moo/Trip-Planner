@@ -9,7 +9,6 @@ import androidx.lifecycle.LiveData;
 import com.example.d308vacationproject.dao.ExcursionDAO;
 import com.example.d308vacationproject.dao.TripDAO;
 import com.example.d308vacationproject.dao.UserDAO;
-
 import com.example.d308vacationproject.entities.Excursion;
 import com.example.d308vacationproject.entities.Trip;
 import com.example.d308vacationproject.entities.User;
@@ -119,13 +118,13 @@ public class Repository implements IRepository {
             return true;
         });
         try {
-            return future.get();    //Wait for the background thread to finish
+            return future.get();    // Wait for the background thread to finish
         } catch (Exception e) {
             return false;
         }
     }
 
-    //Attempt to log in. Returns the User object if credentials match, null otherwise.
+    // Attempt to log in. Returns the User object if credentials match, null otherwise.
     public User loginUser(String username, String hashedPassword) {
         Future<User> future = databaseExecutor.submit(() -> {
             return mUserDAO.login(username, hashedPassword);
@@ -152,7 +151,7 @@ public class Repository implements IRepository {
         }
     }
 
-    // Get all trips for a user returned as a List.
+    // Get all excursions for a trip
     // Uses Future to run on background thread and wait for results
     public List<Excursion> getAssociatedExcursionsDirect(int tripID) {
         Future<List<Excursion>> future = databaseExecutor.submit(() -> {

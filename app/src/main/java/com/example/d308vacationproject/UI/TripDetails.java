@@ -12,14 +12,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.EditText;
-
-import androidx.appcompat.widget.SearchView;
-
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -137,10 +135,7 @@ public class TripDetails extends AppCompatActivity {
                     checkboxNotifyEnd.setChecked(t.isNotifyEnd());
 
                     // Update the excursion adapter with the trip's date range
-                    excursionAdapter.updateTripDateRange(
-                            t.getStartDate() != null ? t.getStartDate() : "",
-                            t.getEndDate() != null ? t.getEndDate() : ""
-                    );
+                    excursionAdapter.updateTripDateRange(t.getStartDate() != null ? t.getStartDate() : "", t.getEndDate() != null ? t.getEndDate() : "");
                     break;
                 }
             }
@@ -153,15 +148,11 @@ public class TripDetails extends AppCompatActivity {
     // Shows a DatePickerDialog and sets the selected date on the appropriate field
     private void showDatePicker(boolean isStart) {
         Calendar cal = Calendar.getInstance();
-        new DatePickerDialog(
-                this,
-                (view, year, month, day) -> {
-                    String date = String.format("%02d/%02d/%d", month + 1, day, year);
-                    if (isStart) editStartDate.setText(date);
-                    else editEndDate.setText(date);
-                },
-                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)
-        ).show();
+        new DatePickerDialog(this, (view, year, month, day) -> {
+            String date = String.format("%02d/%02d/%d", month + 1, day, year);
+            if (isStart) editStartDate.setText(date);
+            else editEndDate.setText(date);
+        }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show();
     }
 
     // Loads excursions from the database, optionally filtered by a search query.
@@ -276,8 +267,6 @@ public class TripDetails extends AppCompatActivity {
         startActivity(Intent.createChooser(shareIntent, "Share via"));
     }
 
-    // Get the logged-in user's ID
-
 
     // Validates input and saves (inserts or updates) the trip to the database.
     // Schedules notifications if the user checked the notification boxes.
@@ -313,13 +302,7 @@ public class TripDetails extends AppCompatActivity {
         int userId = prefs.getInt("loggedInUserId", -1);
 
         // Create trip object (pass 0 for new trips so Room auto-generates the ID)
-        Trip trip = new Trip(
-                tripID == -1 ? 0 : tripID,
-                name, hotel, start, end,
-                checkboxNotifyStart.isChecked(),
-                checkboxNotifyEnd.isChecked(),
-                userId
-        );
+        Trip trip = new Trip(tripID == -1 ? 0 : tripID, name, hotel, start, end, checkboxNotifyStart.isChecked(), checkboxNotifyEnd.isChecked(), userId);
 
         // Insert or update depending on whether this is a new or existing trip
         if (tripID == -1) {

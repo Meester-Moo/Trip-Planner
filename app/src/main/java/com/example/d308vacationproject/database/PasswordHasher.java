@@ -14,7 +14,7 @@ public class PasswordHasher {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hashBytes = digest.digest(password.getBytes());
 
-            //Convert the byte array into a hexadecimal string
+            // Convert the byte array into a hexadecimal string
             StringBuilder hexString = new StringBuilder();
             for (byte b : hashBytes) {
                 String hex = Integer.toHexString(0xff & b);

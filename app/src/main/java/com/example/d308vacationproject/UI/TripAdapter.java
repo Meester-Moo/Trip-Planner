@@ -42,7 +42,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
 
             // Click listener: opens TripDetails and passes the trip ID
             itemView.setOnClickListener(view -> {
-                int position = getAdapterPosition();
+                int position = getBindingAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
                     final Trip current = mTrips.get(position);
                     Intent intent = new Intent(context, TripDetails.class);

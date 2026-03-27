@@ -155,11 +155,7 @@ public class ExcursionDetails extends AppCompatActivity {
         }
 
         // Create excursion object (pass 0 for new excursions so Room auto-generates the ID)
-        Excursion excursion = new Excursion(
-                excursionID == -1 ? 0 : excursionID,
-                name, date, tripID,
-                checkboxNotify.isChecked()
-        );
+        Excursion excursion = new Excursion(excursionID == -1 ? 0 : excursionID, name, date, tripID, checkboxNotify.isChecked());
 
         if (excursionID == -1) {
             // Insert new excursion with callback to get the generated ID for notifications
@@ -221,16 +217,10 @@ public class ExcursionDetails extends AppCompatActivity {
     // Shows a DatePickerDialog and sets the selected date on the date field
     private void showDatePicker() {
         Calendar cal = Calendar.getInstance();
-        DatePickerDialog picker = new DatePickerDialog(
-                this,
-                (view, year, month, day) -> {
-                    String selectedDate = String.format("%02d/%02d/%d", month + 1, day, year);
-                    editDate.setText(selectedDate);
-                },
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH)
-        );
+        DatePickerDialog picker = new DatePickerDialog(this, (view, year, month, day) -> {
+            String selectedDate = String.format("%02d/%02d/%d", month + 1, day, year);
+            editDate.setText(selectedDate);
+        }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
         picker.show();
     }
 

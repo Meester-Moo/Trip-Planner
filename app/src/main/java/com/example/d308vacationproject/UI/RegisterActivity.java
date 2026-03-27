@@ -58,13 +58,13 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        //Check passwords match
+        // Check passwords match
         if (!password.equals(confirmPassword)) {
             Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        //Hash the password and attempt to register
+        // Hash the password and attempt to register
         String hashedPassword = PasswordHasher.hashPassword(password);
         boolean success = repository.registerUser(username, hashedPassword);
 
