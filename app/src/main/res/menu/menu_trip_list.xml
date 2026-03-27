@@ -13,4 +13,8 @@
         android:id="@+id/action_generate_report"
         android:title="Generate Report" />
 
+    <item
+        android:id="@+id/action_logout"
+        android:title="Logout" />
+
 </menu>

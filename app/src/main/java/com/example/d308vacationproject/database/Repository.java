@@ -23,7 +23,7 @@ import java.util.concurrent.Future;
 // Repository acts as a clean API between the UI layer and the database.
 // All database writes run on a background thread pool to avoid blocking the UI.
 // All database reads return LiveData, which automatically notifies observers when data changes.
-public class Repository {
+public class Repository implements IRepository {
 
     private final ExcursionDAO mExcursionDAO;
     private final TripDAO mTripDAO;
@@ -97,10 +97,6 @@ public class Repository {
         });
     }
 
-    // Callback interface for excursion insert — provides the new ID after insertion completes
-    public interface OnInsertCompleteListener {
-        void onInsertComplete(long newId);
-    }
 
     public void update(Excursion excursion) {
         databaseExecutor.execute(() -> mExcursionDAO.update(excursion));

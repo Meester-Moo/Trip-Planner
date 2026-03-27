@@ -149,10 +149,24 @@ public class TripList extends AppCompatActivity {
             return true;
         }
 
-        //Navigate to the Report screen
+        // Navigate to the Report screen
         if (item.getItemId() == R.id.action_generate_report) {
             Intent intent = new Intent(TripList.this, ReportActivity.class);
             startActivity(intent);
+            return true;
+        }
+
+        // Log the user out and return to the login screen
+        if (item.getItemId() == R.id.action_logout) {
+            SharedPreferences prefs = getSharedPreferences("TripPlannerPrefs", MODE_PRIVATE);
+            prefs.edit().clear().apply();
+
+            Intent intent = new Intent(TripList.this, LoginActivity.class);
+            // These flags clear the entire back stack so the user can't press "Back"
+            // to bypass the login screen after logging out
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
             return true;
         }
 
