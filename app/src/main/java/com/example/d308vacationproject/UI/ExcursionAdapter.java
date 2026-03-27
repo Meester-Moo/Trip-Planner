@@ -40,7 +40,7 @@ public class ExcursionAdapter extends RecyclerView.Adapter<ExcursionAdapter.Excu
 
             // Click listener: opens ExcursionDetails with all excursion data and trip date range
             itemView.setOnClickListener(view -> {
-                int position = getAdapterPosition();
+                int position = getBindingAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
                     Excursion current = mExcursions.get(position);
 
