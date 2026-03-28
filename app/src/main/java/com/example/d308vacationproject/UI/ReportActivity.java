@@ -1,14 +1,18 @@
 package com.example.d308vacationproject.UI;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +35,8 @@ import java.util.List;
 // Demonstrates Polymorphism by using PlannerItem references to handle both
 // Trip and Excursion objects through the same getSummary() method.
 public class ReportActivity extends AppCompatActivity {
+
+    private String reportText = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +69,16 @@ public class ReportActivity extends AppCompatActivity {
 
         // Generate the report
         generateReport(userId);
+
+        // Copy to Clipboard button
+        Button copyButton = findViewById(R.id.buttonCopyReport);
+        copyButton.setOnClickListener(v -> {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("Trip Report", reportText);
+            clipboard.setPrimaryClip(clip);
+            Toast.makeText(this, "Report copied to clipboard!", Toast.LENGTH_SHORT).show();
+        });
+
     }
 
     private void generateReport(int userId) {
@@ -74,8 +90,16 @@ public class ReportActivity extends AppCompatActivity {
         // If no trips exist, show the hidden "no data" message and stop
         if (trips.isEmpty()) {
             findViewById(R.id.noDataMessage).setVisibility(View.VISIBLE);
+            // Hide the export report button if there's no data to copy
+            findViewById(R.id.buttonCopyReport).setVisibility(View.GONE);
             return;
         }
+
+        // Start building the text version of the report for clipboard export
+        StringBuilder sb = new StringBuilder();
+        sb.append("=== Trip Planner Report ===\n");
+        sb.append(((TextView) findViewById(R.id.reportTimestamp)).getText()).append("\n");
+        sb.append(((TextView) findViewById(R.id.reportUser)).getText()).append("\n\n");
 
         // --- Build the Trips Table ---
         TableLayout tripsTable = findViewById(R.id.tripsTable);
@@ -83,10 +107,16 @@ public class ReportActivity extends AppCompatActivity {
         // Add header row
         tripsTable.addView(createHeaderRow(new String[]{"Trip Name", "Hotel", "Start", "End", "#"}));
 
+        sb.append("TRIPS\n");
+        sb.append(String.format("%-20s %-15s %-12s %-12s %s\n", "Trip Name", "Hotel", "Start", "End", "#"));
+        sb.append("-------------------------------------------------------------\n");
+
         // Add a data row for each trip
         for (Trip trip : trips) {
             List<Excursion> excursions = repository.getAssociatedExcursionsDirect(trip.getTripID());
             tripsTable.addView(createDataRow(new String[]{trip.getTripName(), trip.getHotel(), trip.getStartDate(), trip.getEndDate(), String.valueOf(excursions.size())}));
+
+            sb.append(String.format("%-20s %-15s %-12s %-12s %s\n", trip.getTripName() != null ? trip.getTripName() : "", trip.getHotel() != null ? trip.getHotel() : "", trip.getStartDate() != null ? trip.getStartDate() : "", trip.getEndDate() != null ? trip.getEndDate() : "", excursions.size()));
         }
 
         // --- Build the Excursions Table ---
@@ -94,6 +124,11 @@ public class ReportActivity extends AppCompatActivity {
 
         // Add header row
         excursionsTable.addView(createHeaderRow(new String[]{"Excursion", "Date", "Trip"}));
+
+        sb.append("\nEXCURSION DETAILS\n");
+        sb.append(String.format("%-20s %-12s %s\n", "Excursion", "Date", "Trip"));
+        sb.append("---------------------------------------------\n");
+
 
         // Collect ALL excursions across all trips into one list.
 
@@ -107,6 +142,8 @@ public class ReportActivity extends AppCompatActivity {
 
             for (Excursion excursion : excursions) {
                 excursionsTable.addView(createDataRow(new String[]{excursion.getExcursionName(), excursion.getExcursionDate(), trip.getTripName()}));
+
+                sb.append(String.format("%-20s %-12s %s\n", excursion.getExcursionName() != null ? excursion.getExcursionName() : "", excursion.getExcursionDate() != null ? excursion.getExcursionDate() : "", trip.getTripName() != null ? trip.getTripName() : ""));
             }
 
             // Add to PlannerItem list for the summary section
@@ -118,7 +155,18 @@ public class ReportActivity extends AppCompatActivity {
         if (allItems.size() == trips.size()) {
             // Only trips in the list, no excursions were added
             excursionsTable.addView(createDataRow(new String[]{"No excursions found", "", ""}));
+            sb.append("No excursions found\n");
         }
+
+        // Polymorphism - append summaries using PlannerItem
+        sb.append("\nTRIP SUMMARIES\n");
+        sb.append("---------------------------------------------\n");
+        for (PlannerItem item : allItems) {
+            sb.append(item.getSummary()).append("\n");
+        }
+
+        // Store the completed report text for the clipboard button
+        reportText = sb.toString();
 
     }
 
